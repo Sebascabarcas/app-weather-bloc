@@ -1,6 +1,7 @@
 import 'package:app_weather_cubit/constants/constants.dart';
 import 'package:app_weather_cubit/cubits/weather/weather_cubit.dart';
 import 'package:app_weather_cubit/pages/search_page.dart';
+import 'package:app_weather_cubit/pages/settings_page.dart';
 import 'package:app_weather_cubit/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,13 @@ class _HomePageState extends State<HomePage> {
                   context.read<WeatherCubit>().fetchWeather(_city!);
                 }
               },
-              icon: const Icon(Icons.search))
+              icon: const Icon(Icons.search)),
+          IconButton(
+              onPressed: () async {
+                 Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
+              icon: const Icon(Icons.settings))
         ],
       ),
       body: _showWeather(),
