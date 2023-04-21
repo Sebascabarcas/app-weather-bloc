@@ -1,4 +1,5 @@
 import 'package:app_weather_cubit/constants/constants.dart';
+import 'package:app_weather_cubit/cubits/temp_settings/temp_settings_cubit.dart';
 import 'package:app_weather_cubit/cubits/weather/weather_cubit.dart';
 import 'package:app_weather_cubit/pages/search_page.dart';
 import 'package:app_weather_cubit/pages/settings_page.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.search)),
           IconButton(
               onPressed: () async {
-                 Navigator.push(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SettingsPage()));
               },
               icon: const Icon(Icons.settings))
@@ -46,6 +47,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   String showTemperature(double temperature) {
+    final tempUnit = context.watch<TempSettingsCubit>().state.tempUnit;
+
+    if (tempUnit != TempUnit.celsius) {
+      return ((temperature * 9 / 5) + 32).toStringAsFixed(2) + '°F';
+    }
+    
     return temperature.toStringAsFixed(2) + '°C';
   }
 
