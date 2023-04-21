@@ -1,6 +1,14 @@
+import 'package:app_weather_cubit/cubits/weather/weather_cubit.dart';
+import 'package:app_weather_cubit/pages/home_page.dart';
+import 'package:app_weather_cubit/repositories/weather_repository.dart';
+import 'package:app_weather_cubit/services/weather_api_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(const MainApp());
 }
 
@@ -9,12 +17,21 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    return RepositoryProvider(
+        create: (context) => WeatherRepository(
+            weatherApiServices: WeatherApiServices(httpClient: http.Client())),
+        child: MultiBlocProvider(
+            providers: [
+              BlocProvider<WeatherCubit>(
+                create: (context) => WeatherCubit(
+                    weatherRepository: context.read<WeatherRepository>()),
+              ),
+            ],
+            child: MaterialApp(
+              title: 'Weather App',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(primarySwatch: Colors.blue),
+              home: HomePage(),
+            )));
   }
 }
